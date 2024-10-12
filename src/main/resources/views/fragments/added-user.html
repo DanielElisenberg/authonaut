@@ -1,0 +1,17 @@
+<tr th:id="'user-' + ${user.id}">
+  <td th:text="${user.username}">url</td>
+  <td th:text="${user.role}">No</td>
+  <td th:text="${user.hasTwoFactorAuth}">No</td>
+  <td>
+    <button class="button is-primary is-light" th:href="@{/management/dashboard/users/{userId}(userId=${user.id})}"
+      hx-swap="outerHTML">
+      Edit
+    </button>
+    <button class="button is-danger is-light" hx-confirm="Are you sure?"
+      th:attr="hx-delete='/management/users/' + ${user.id}, hx-target='#user-' + ${user.id}" hx-swap="outerHTML">
+      Delete
+    </button>
+
+  </td>
+<tr>
+<tr id="added-user"></tr>

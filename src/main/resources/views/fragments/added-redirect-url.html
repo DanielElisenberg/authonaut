@@ -1,0 +1,19 @@
+<tr th:id="'redirectUrl-' + ${redirectUrl.id}">
+  <td th:text="${redirectUrl.url}">url</td>
+  <td th:text="${redirectUrl.isValid}">No</td>
+  <td>
+    <button class="button is-danger is-light" hx-confirm="Are you sure?"
+      th:attr="hx-delete='/management/redirect-urls/' + ${redirectUrl.id}, hx-target='#redirectUrl-' + ${redirectUrl.id}"
+      hx-swap="outerHTML">
+      Delete
+    </button>
+    <a th:if="${redirectUrl.isValid}" class=" button is-info is-light">
+      Set to Invalid
+    </a>
+    <a th:if="${!redirectUrl.isValid}" class=" button is-info is-light">
+      Set to Valid
+    </a>
+
+  </td>
+</tr>
+<tr id="added-redirect-url"></tr>

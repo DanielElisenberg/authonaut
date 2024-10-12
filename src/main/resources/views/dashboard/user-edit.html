@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/head :: commonHead">
+</head>
+
+
+<nav th:replace="fragments/navbar :: nav">
+</nav>
+
+
+<body>
+  <section class="section">
+    <div class="container">
+      <h1 class="title" th:text="'Update user: ' + ${username}">Update user</h1>
+      <form th:attr="hx-patch='/management/users/' + ${userId}" hx-trigger="submit" hx-swap="outerHTML" class="box"
+        onsubmit="trimInputs()">
+        <div class="field">
+          <label class="label">Username</label>
+          <div class="control">
+            <input class="input" type="text" id="username" placeholder="Enter username" oninput="toggleField(this)">
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Password</label>
+          <div class="control">
+            <input class="input" type="password" id="password" placeholder="Enter new password"
+              oninput="toggleField(this)">
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Role</label>
+          <div class="control">
+            <div class="select">
+              <select id="role" onchange="toggleField(this)">
+                <option value="">Choose role</option>
+                <option value="admin">Admin</option>
+                <option value="default">Default</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="control">
+            <label class="checkbox">
+              <input type="checkbox" id="reset2fa" onchange="toggleField(this)">
+              Reset two-factor authentication
+            </label>
+          </div>
+        </div>
+
+        <div class="field is-grouped">
+          <div class="control">
+            <button class="button is-link" type="submit">Update</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <script>
+    function toggleField(field) {
+      if (field.type === 'checkbox') {
+        if (field.checked) {
+          field.setAttribute('name', field.id);
+        } else {
+          field.removeAttribute('name');
+        }
+      } else if (field.value.trim() !== '') {
+        field.setAttribute('name', field.id);
+      } else {
+        field.removeAttribute('name');
+      }
+    }
+    function trimInputs() {
+      const username = document.getElementById('username');
+      const password = document.getElementById('password');
+
+      username.value = username.value.trim();
+      password.value = password.value.trim();
+    }
+  </script>
+</body>
+
+</html>

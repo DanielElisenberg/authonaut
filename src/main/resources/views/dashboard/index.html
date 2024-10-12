@@ -1,0 +1,56 @@
+<html>
+
+<head th:replace="~{fragments/head :: commonHead}">
+</head>
+
+<nav th:replace="~{fragments/navbar :: nav}">
+</nav>
+
+<body>
+  <div class="container">
+    <section class="section">
+      <div class="columns is-centered">
+        <div class="column is-half">
+          <div class="box">
+            <h1 class="title">Profile</h1>
+            <div class="content">
+              <p><strong>Username:</strong> <span th:text="${username}"></span></p>
+              <p><strong>Role:</strong> <span th:text="${role}"></span></p>
+              <a class="button is-primary" th:href="@{/management/dashboard/users/{userId}(userId=${userId})}">
+                Edit
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="columns is-centered">
+        <div class="column is-half">
+          <div class="box">
+            <h2 class="title">Login History</h2>
+            <table class="table is-fullwidth is-striped">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Redirect</th>
+                  <th>Successful</th>
+                </tr>
+              </thead>
+              <tbody id="login-history">
+                <tr th:each="login : ${loginHistory}" th:id="'login-' + ${login.id}">
+                  <td th:text="${login.timestamp}">N/A</td>
+                  <td th:text="${login.redirectUrl}">N/A</td>
+                  <td th:text="${login.successful}">N/A</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+
+</html>

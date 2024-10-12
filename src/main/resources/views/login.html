@@ -1,0 +1,62 @@
+<html>
+
+<head th:replace="fragments/head :: commonHead">
+</head>
+<style>
+  .login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f5f5f5;
+  }
+
+  .login-box {
+    padding: 2rem;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    border-radius: 8px;
+  }
+
+  .login-box .button {
+    width: 100%;
+  }
+
+  .title {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+</style>
+
+<body>
+  <div class="login-container">
+    <div class="login-box">
+      <h1 class="title is-4">Login</h1>
+      <form method="post" th:attr="hx-post='/login' + (${redirect} != null ? ('?redirect=' + ${redirect}) : '')"
+        hx-target="#otp-field" hx-swap="outerHTML">
+        <div class="field">
+          <label class="label" for="username">Username</label>
+          <div class="control">
+            <input class="input" type="text" id="username" name="username" required placeholder="Enter your username">
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label" for="password">Password</label>
+          <div class="control">
+            <input class="input" type="password" id="password" name="password" required
+              placeholder="Enter your password">
+          </div>
+        </div>
+        <div id="otp-field"></div>
+        <div class="field">
+          <div class="control">
+            <button class="button is-primary" type="submit">Login</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,127 @@
+<html>
+
+<head th:replace="~{fragments/head :: commonHead}">
+</head>
+
+<nav th:replace="~{fragments/navbar :: nav}">
+</nav>
+
+<body>
+  <div th:if="${role == 'admin'}">
+    <section class="section">
+      <div class="container">
+        <h1 class="title">Redirect Url Management</h1>
+        <table class="table is-fullwidth is-striped">
+          <thead>
+            <tr>
+              <th>Redirect Url</th>
+              <th>Valid</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="redirectUrl : ${redirectUrls}" th:id="'redirectUrl-' + ${redirectUrl.id}">
+              <td th:text="${redirectUrl.url}">url</td>
+              <td th:text="${redirectUrl.isValid}">No</td>
+              <td>
+                <button class="button is-danger is-light" hx-confirm="Are you sure?"
+                  th:attr="hx-delete='/management/redirect-urls/' + ${redirectUrl.id}, hx-target='#redirectUrl-' + ${redirectUrl.id}"
+                  hx-swap="outerHTML">
+                  Delete
+                </button>
+              </td>
+            </tr>
+            <tr id="added-redirect-url"></tr>
+          </tbody>
+        </table>
+        <div class="has-text-centered mt-4" id="add-user-form-button-div">
+          <button class="button is-success is-light" onclick="toggleAddUserMenu()">
+            <span class="icon">
+              <i class="fas fa-plus"></i>
+            </span>
+            <span>Add New Redirect Url</span>
+          </button>
+        </div>
+        <div id="add-user-form-container" style="display: none;">
+          <div class="box">
+            <h3 class="title is-4">Add New User</h3>
+            <form method="post" hx-post="/management/redirect-urls" hx-target="#added-redirect-url" hx-swap="outerHTML">
+              <div class="field">
+                <label class="label">Url</label>
+                <div class="control">
+                  <input class="input" type="text" name="url" required>
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="label">isValid</label>
+                <div class="control">
+                  <div class="select">
+                    <select name="isValid">
+                      <option value="true">Yes</option>
+                      <option value="false">No</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="field is-grouped">
+                <div class="control">
+                  <button class="button is-link" type="submit">Submit</button>
+                  <button class="button is-link" type="cancel" onclick="toggleAddUserMenu()">Cancel</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  <h1 th:if="${role != 'admin'}">Dashboard</h1>
+</body>
+<style>
+  /* Fade out animation */
+  .fade-out {
+    animation: fadeOut 0.4s forwards;
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+
+    to {
+      opacity: 0;
+    }
+  }
+</style>
+
+<script>
+  document.body.addEventListener('htmx:afterRequest', (evt) => {
+    const target = document.getElementById("deleted-row");
+    if (target == null) {
+      return;
+    }
+    target.classList.add('fade-out');
+    setTimeout(() => {
+      target.remove();
+    }, 400);
+  });
+
+  function toggleAddUserMenu() {
+    const showAddUserMenuButton = document.getElementById('add-user-form-button-div');
+    const addUserFormContainer = document.getElementById('add-user-form-container');
+
+    if (showAddUserMenuButton.style.display === 'none') {
+      showAddUserMenuButton.style.display = 'block';
+      addUserFormContainer.style.display = 'none';
+    } else {
+      showAddUserMenuButton.style.display = 'none';
+      addUserFormContainer.style.display = 'block';
+    }
+  }
+</script>
+
+</html>

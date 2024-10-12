@@ -1,0 +1,57 @@
+<div th:unless="${isHtmx}">
+
+  <head th:replace="~{fragments/head :: commonHead}">
+  </head>
+
+  <nav th:replace="~{fragments/navbar :: nav}">
+  </nav>
+</div>
+
+<tbody th:if="${isHtmx}" id="login-history">
+  <tr th:each="log: ${logs}" th:id="'log-' + ${log.id}">
+    <td th:text="${log.timestamp}">N/A</td>
+    <td th:text="${log.username}">N/A</td>
+    <td th:text="${log.redirectUrl}">N/A</td>
+    <td th:text="${log.successful}">N/A</td>
+  </tr>
+</tbody>
+
+<body th:unless="${isHtmx}">
+  <div th:if="${role == 'admin'}">
+    <section class="section">
+      <div class="container">
+        <h1 class="title">Login history</h1>
+        <table class="table is-fullwidth is-striped">
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>Username</th>
+              <th>Redirect</th>
+              <th>Successful</th>
+            </tr>
+          </thead>
+          <tbody id="login-history">
+            <tr th:each="log: ${logs}" th:id="'log-' + ${log.id}">
+              <td th:text="${log.timestamp}">N/A</td>
+              <td th:text="${log.username}">N/A</td>
+              <td th:text="${log.redirectUrl}">N/A</td>
+              <td th:text="${log.successful}">N/A</td>
+            </tr>
+          </tbody>
+        </table>
+        <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+          <ul class="pagination-list">
+            <li th:each="i: ${#numbers.sequence(1, totalPages)}">
+              <a class="pagination-link" hx-target="#login-history"
+                th:attr="hx-get='/management/dashboard/logs?page=' + ${i}" hx-swap="outerHTML"
+                th:classappend="${i == currentPage} ? 'is-current'">
+                <span th:text="${i}"></span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+    </section>
+
+  </div>
+  <h1 th:if="${role != 'admin'}">Dashboard</h1>
+</body>

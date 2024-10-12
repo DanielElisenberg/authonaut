@@ -1,0 +1,143 @@
+<html>
+
+<head th:replace="~{fragments/head :: commonHead}">
+</head>
+
+<nav th:replace="~{fragments/navbar :: nav}">
+</nav>
+
+<body>
+  <div th:if="${role == 'admin'}">
+    <section class="section">
+      <div class="container">
+        <h1 class="title">User Management</h1>
+        <table class="table is-fullwidth is-striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Role</th>
+              <th>2FA Registered</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="user : ${users}" th:id="'user-' + ${user.id}">
+              <td th:text="${user.username}">url</td>
+              <td th:text="${user.role}">No</td>
+              <td th:text="${user.hasTwoFactorAuth}">No</td>
+              <td>
+                <button class="button is-primary is-light"
+                  th:href="@{/management/dashboard/users/{userId}(userId=${user.id})}" hx-swap="outerHTML">
+                  Edit
+                </button>
+                <button class="button is-danger is-light" hx-confirm="Are you sure?"
+                  th:attr="hx-delete='/management/users/' + ${user.id}, hx-target='#user-' + ${user.id}"
+                  hx-swap="outerHTML">
+                  Delete
+                </button>
+              </td>
+            <tr id="added-user"></tr>
+          </tbody>
+        </table>
+        <div class="has-text-centered mt-4" id="add-user-form-button-div">
+          <button class="button is-success is-light" onclick="toggleAddUserMenu()">
+            <span class="icon">
+              <i class="fas fa-plus"></i>
+            </span>
+            <span>Add New User</span>
+          </button>
+        </div>
+        <div id="add-user-form-container" style="display: none;">
+          <div class="box">
+            <h3 class="title is-4">Add New User</h3>
+            <form id="add-user-form" method="post" hx-post="/management/users" hx-target="#added-user"
+              hx-swap="outerHTML" hx-on::after-request="resetForm()">
+              <div class="field">
+                <label class="label">Username</label>
+                <div class="control">
+                  <input class="input" type="text" name="username" required>
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="label">Password</label>
+                <div class="control">
+                  <input class="input" type="password" name="password" required>
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="label">Role</label>
+                <div class="control">
+                  <div class="select">
+                    <select name="role">
+                      <option value="default">default</option>
+                      <option value="admin">admin</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="field is-grouped">
+                <div class="control">
+                  <button class="button is-link" type="submit">Submit</button>
+                  <button class="button is-link" type="button" onclick="toggleAddUserMenu()">Cancel</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  <h1 th:if="${role != 'admin'}">Dashboard</h1>
+</body>
+<style>
+  /* Fade out animation */
+  .fade-out {
+    animation: fadeOut 0.4s forwards;
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+
+    to {
+      opacity: 0;
+    }
+  }
+</style>
+
+<script>
+  document.body.addEventListener('htmx:afterRequest', (evt) => {
+    const target = document.getElementById("deleted-row");
+    if (target == null) {
+      return;
+    }
+    target.classList.add('fade-out');
+    setTimeout(() => {
+      target.remove();
+    }, 400);
+  });
+
+  function toggleAddUserMenu() {
+    const showAddUserMenuButton = document.getElementById('add-user-form-button-div');
+    const addUserFormContainer = document.getElementById('add-user-form-container');
+
+    if (showAddUserMenuButton.style.display === 'none') {
+      showAddUserMenuButton.style.display = 'block';
+      addUserFormContainer.style.display = 'none';
+    } else {
+      showAddUserMenuButton.style.display = 'none';
+      addUserFormContainer.style.display = 'block';
+    }
+  }
+  function resetForm() {
+    document.getElementById('add-user-form').reset()
+  }
+</script>
+
+</html>
